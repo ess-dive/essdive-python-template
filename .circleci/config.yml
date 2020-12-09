@@ -1,0 +1,32 @@
+jobs:
+  test:
+      docker:
+        - image: circleci/python:3.7-rc-node
+      steps:
+        - checkout
+        - run:
+            command: |
+              mkdir -p ./venv
+              virtualenv ./venv
+              . venv/bin/activate
+              pip install -U pytest pytest-cov mock pytest-asyncio mypy flake8
+              pip install -r requirements.txt
+              python setup.py check
+              echo "*****************"
+              echo "     PYTEST"
+              echo "*****************"
+              PYTHONPATH=. pytest -v --cov=essdive tests/
+              echo "*****************"
+              echo "  Type Checking"
+              echo "*****************"
+              mypy  -v essdive
+              #echo "*****************"
+              #echo "     PEP8"
+              #echo "*****************"
+              #flake8 -v --ignore=E501,E701,E126,W504  essdive
+            coverage: '/\d+\%\s*$/'
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test

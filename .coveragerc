@@ -1,0 +1,10 @@
+[report]
+exclude_lines =
+   __repr__
+   version
+   release
+   logger.info
+   pass
+   entry_point()
+   main()
+
